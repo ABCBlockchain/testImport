@@ -18,6 +18,7 @@ contract FoodecentCoin{
         return(balanceOf[_owner]);
     }
     function _transfer(address _from,address _to,uint _value)public {
+        require(_value<=allowed[_from][msg.sender]);
         require(_to != address(0x0));
         require(balanceOf[_from]>= _value);
         require(balanceOf[_to]+_value >= balanceOf[_to]);
@@ -27,15 +28,6 @@ contract FoodecentCoin{
         balanceOf[_to]+=_value;
         emit Transfer(_from,_to,_value);
         assert(balanceOf[_from] + balanceOf[_to] == previosBalances);
-    }
-    function transfer(address _to,uint _value)public returns(bool success){
-        _transfer(msg.sender,_to,_value);
-        return true;
-    }
-    function transferFrom(address _from,address _to,uint _value)public returns(bool success){
-        require(_value<=allowed[_from][msg.sender]);
-        _transfer(_from,_to,_value);
-        return true;
     }
     function approve(address _spender,uint _value)public returns(bool success){
         allowed[msg.sender][_spender]=_value;
